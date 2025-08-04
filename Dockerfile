@@ -11,7 +11,7 @@ COPY . .
 RUN mvn clean package
 
 # Fase de ejecución con JBoss EAP 7.4
-FROM registry.redhat.io/jboss-eap-7/eap74-openjdk11-openshift-rhel8:7.4.0
+FROM registry.redhat.io/jboss-eap-7/eap74-openjdk17-openshift
 
 # Configurar usuario y permisos para OpenShift
 USER root
