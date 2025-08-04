@@ -3,8 +3,8 @@
 FROM registry.redhat.io/jboss-eap-7/eap74-openjdk11-openshift-rhel8 as builder
 
 # Instalar Maven (opcional si no está disponible)
-USER root
-RUN microdnf install -y maven && microdnf clean all
+#USER root
+#RUN microdnf install -y maven && microdnf clean all
 
 # Copiar proyecto
 COPY . /tmp/app
