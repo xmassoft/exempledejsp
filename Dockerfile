@@ -1,19 +1,31 @@
 
 
-FROM registry.redhat.io/jboss-eap-7/eap74-openjdk11-openshift-rhel8 as builder
+# Fase de construcción con Maven
+FROM maven:3.8.6-openjdk-11 AS builder
 
-# Instalar Maven (opcional si no está disponible)
-#USER root
-#RUN microdnf install -y maven && microdnf clean all
+# Copiar el código fuente
+WORKDIR /app
+COPY . .
 
-# Copiar proyecto
-COPY . /tmp/app
-WORKDIR /tmp/app
-
-# Compilar WAR
+# Construir el proyecto
 RUN mvn clean package
 
-# Fase final: copiar el WAR compilado a la imagen de ejecución
-FROM registry.redhat.io/jboss-eap-7/eap74-openjdk11-openshift-rhel8
+# Fase de ejecución con JBoss EAP 7.4
+FROM registry.redhat.io/jboss-eap-7/eap74-openjdk11-openshift-rhel8:7.4.0
 
-COPY --from=builder /tmp/app/target/exempledejsp.war /deployments/
+# Configurar usuario y permisos para OpenShift
+USER root
+RUN chown -R jboss:root /opt/eap && \
+    chmod -R ug+rwx /opt/eap
+
+# Copiar el WAR construido al directorio de despliegues de JBoss
+COPY --from=builder /app/target/*.war /opt/eap/standalone/deployments/
+
+# Volver al usuario jboss (requerido por OpenShift)
+USER jboss
+
+# Puerto por defecto para JBoss
+EXPOSE 8080
+
+# Comando para ejecutar JBoss
+CMD ["/opt/eap/bin/openshift-launch.sh"]
