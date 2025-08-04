@@ -75,19 +75,13 @@
     </pluginManagement>
 	
 
-
-
-	<plugins>
 	<plugins>
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>
             <version>3.3.2</version>
-            <configuration>
-                <failOnMissingWebXml>false</failOnMissingWebXml>
-            </configuration>
         </plugin>
-    </plugins>
+
 		<!-- The JBoss AS plugin deploys your war to a local JBoss EAP container -->
 		<!-- To use, run: mvn package jboss-as:deploy -->
 		<plugin>
